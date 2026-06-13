@@ -1,0 +1,196 @@
+.container {
+  padding: 1rem 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--color-gray-500);
+}
+
+.controlsSection {
+  background-color: var(--color-white);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+  border: 1px solid var(--color-gray-200);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.filters {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.inputGroup {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.select {
+  padding: 0.75rem;
+}
+
+.exportActions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  border-top: 1px solid var(--color-gray-200);
+  padding-top: 1.5rem;
+}
+
+.loading {
+  padding: 3rem;
+  text-align: center;
+  color: var(--color-gray-500);
+}
+
+.emptyReport {
+  padding: 3rem;
+  text-align: center;
+  color: var(--color-gray-500);
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-gray-300);
+}
+
+/* Print Area Styles */
+.printArea {
+  background-color: var(--color-white);
+  padding: 3rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-gray-200);
+  min-height: 800px;
+}
+
+.printHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logoWrapper {
+  margin: 0 auto 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.logoImage {
+  max-width: 120px;
+  height: auto;
+  object-fit: contain;
+}
+
+.printHeader h2 {
+  font-size: 1.25rem;
+  color: var(--color-gray-800);
+  font-weight: 600;
+}
+
+.printHeader h1 {
+  font-size: 1.75rem;
+  color: var(--color-maroon);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.reportTypeTitle {
+  font-size: 1.125rem;
+  color: var(--color-gray-600);
+  font-weight: 500;
+}
+
+.printDivider {
+  margin: 2rem 0;
+  border: none;
+  border-top: 2px solid var(--color-maroon);
+}
+
+.reportSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background-color: var(--color-gray-50);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+  border: 1px solid var(--color-gray-200);
+}
+
+.reportSummary p {
+  color: var(--color-gray-800);
+}
+
+.reportTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reportTable th {
+  background-color: var(--color-maroon-dark);
+  color: var(--color-white);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 500;
+  border: 1px solid var(--color-gray-300);
+}
+
+.reportTable td {
+  padding: 1rem;
+  border: 1px solid var(--color-gray-300);
+  vertical-align: top;
+}
+
+.participantList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.participantList li small {
+  color: var(--color-gray-500);
+}
+
+@media print {
+  :global(body) {
+    background-color: white !important;
+  }
+  
+  .controlsSection, .header, :global(aside) {
+    display: none !important;
+  }
+  
+  .printArea {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  :global(main) {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+}

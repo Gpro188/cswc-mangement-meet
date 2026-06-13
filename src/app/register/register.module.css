@@ -1,0 +1,292 @@
+.container {
+  min-height: 100vh;
+  background-color: var(--color-gray-50);
+  padding: 3rem 1rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.logoWrapper {
+  margin: 0 auto 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.logoImage {
+  max-width: 120px;
+  height: auto;
+  object-fit: contain;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: var(--color-gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: var(--color-gray-500);
+}
+
+.formCard {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--color-white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 2.5rem;
+}
+
+.stepTitle {
+  font-size: 1.5rem;
+  color: var(--color-gray-900);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.inputGroup {
+  margin-bottom: 2rem;
+}
+
+.select {
+  padding: 1rem;
+  font-size: 1.125rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-gray-200);
+  cursor: pointer;
+}
+
+.select:focus {
+  border-color: var(--color-maroon);
+  box-shadow: none;
+}
+
+.stepActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.meetingDetails {
+  background-color: rgba(128, 0, 0, 0.05);
+  border-left: 4px solid var(--color-maroon);
+  padding: 1.5rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin-bottom: 2rem;
+}
+
+.meetingDetails h3 {
+  color: var(--color-maroon-dark);
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+}
+
+.meetingInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-gray-800);
+}
+
+.infoItem svg {
+  color: var(--color-maroon);
+}
+
+.existingMembers {
+  background-color: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.existingMembers h3 {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  color: var(--color-gray-800);
+}
+
+.memberList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.memberItem {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-white);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-gray-200);
+  gap: 1rem;
+}
+
+.memberAvatar {
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-maroon-transparent);
+  color: var(--color-maroon);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.memberDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.memberDetails strong {
+  color: var(--color-gray-900);
+}
+
+.memberDetails span {
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+}
+
+.registeredBadge {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.participantsSection {
+  margin-bottom: 2rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.sectionHeader h3 {
+  font-size: 1.25rem;
+  color: var(--color-gray-900);
+}
+
+.participantRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--color-gray-50);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-gray-200);
+}
+
+.participantNum {
+  width: 30px;
+  height: 30px;
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.participantFields {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.removeBtn {
+  color: var(--color-gray-400);
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.removeBtn:hover {
+  color: var(--color-error);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--color-gray-200);
+  padding-top: 2rem;
+}
+
+.pageLoader {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--color-gray-500);
+}
+
+.successContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-gray-50);
+  padding: 1rem;
+}
+
+.successCard {
+  background-color: var(--color-white);
+  padding: 3rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.successIcon {
+  color: var(--color-success);
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.successCard h1 {
+  font-size: 2rem;
+  color: var(--color-gray-900);
+  margin-bottom: 1rem;
+}
+
+.successCard p {
+  color: var(--color-gray-600);
+  font-size: 1.125rem;
+}
+
+@media (max-width: 768px) {
+  .participantFields {
+    grid-template-columns: 1fr;
+  }
+  
+  .formCard {
+    padding: 1.5rem;
+  }
+}
