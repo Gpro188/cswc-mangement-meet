@@ -71,3 +71,74 @@
   font-size: 1.25rem;
   color: var(--color-gray-500);
 }
+
+.meetingsSection {
+  margin-top: 3rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin-bottom: 1.5rem;
+}
+
+.tableWrapper {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-gray-200);
+  overflow-x: auto;
+}
+
+.meetingsTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.meetingsTable th {
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  color: var(--color-gray-500);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-gray-200);
+  background-color: var(--color-gray-50);
+}
+
+.meetingsTable td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-gray-100);
+  color: var(--color-gray-700);
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.meetingsTable tr:last-child td {
+  border-bottom: none;
+}
+
+.meetingTitle {
+  font-weight: 600;
+  color: var(--color-gray-900);
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-gray-500);
+  font-style: italic;
+}
