@@ -84,7 +84,7 @@ export default function RemindersPage() {
     if (!center) return;
 
     // Build default message
-    const defaultMsg = `Dear [Name],\n\nThis is a reminder from CSWC. The Management Meet for your center is scheduled for ${center.date || 'TBD'} at ${center.time || 'TBD'}${center.timeTo ? ` - ${center.timeTo}` : ''}.\n\nVenue: ${center.venue || center.title}\n\nWe hope you will participate in the meeting.`;
+    const defaultMsg = `Dear [Name],\n\nThis is a reminder from CSWC. The Management Meet for your center is scheduled for ${center.date || 'TBD'} at ${center.time || 'TBD'}${center.timeTo ? ` - ${center.timeTo}` : ''}.\n\nVenue: ${center.venue || center.title}${center.locationUrl ? `\nLocation Map: ${center.locationUrl}` : ''}\n\nWe hope you will participate in the meeting.`;
     setMessageTemplate(defaultMsg);
 
     // Get participants

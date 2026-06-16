@@ -192,10 +192,16 @@ export default function Register() {
                 <Calendar size={18} />
                 <span><strong>Date:</strong> {activeCenter.date || 'TBD'}</span>
               </div>
-              <div className={styles.infoItem}>
+              <div className={styles.infoItem} style={activeCenter.locationUrl ? { marginBottom: '0.5rem' } : {}}>
                 <Clock size={18} />
                 <span><strong>Time:</strong> {activeCenter.time || 'TBD'} {activeCenter.timeTo ? `- ${activeCenter.timeTo}` : ''}</span>
               </div>
+              {activeCenter.locationUrl && (
+                <div className={styles.infoItem}>
+                  <MapPin size={18} />
+                  <span><strong>Location Map:</strong> <a href={activeCenter.locationUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)', textDecoration: 'underline' }}>Click to view map</a></span>
+                </div>
+              )}
             </div>
           )}
 
@@ -281,6 +287,12 @@ export default function Register() {
                     <Clock size={18} />
                     <span><strong>Time:</strong> {activeCenter.time || 'TBD'} {activeCenter.timeTo ? `- ${activeCenter.timeTo}` : ''}</span>
                   </div>
+                  {activeCenter.locationUrl && (
+                    <div className={styles.infoItem}>
+                      <MapPin size={18} />
+                      <span><strong>Location Map:</strong> <a href={activeCenter.locationUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)', textDecoration: 'underline' }}>Click to view map</a></span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

@@ -15,6 +15,7 @@ interface MeetingCenter {
   time: string;
   timeTo: string;
   venue: string;
+  locationUrl?: string;
   assignedZones: string[];
 }
 
@@ -31,7 +32,7 @@ export default function Meetings() {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ title: '', date: '', time: '', timeTo: '', venue: '', assignedZones: [] as string[] });
+  const [formData, setFormData] = useState({ title: '', date: '', time: '', timeTo: '', venue: '', locationUrl: '', assignedZones: [] as string[] });
 
   const fetchData = async () => {
     setLoading(true);
@@ -93,11 +94,12 @@ export default function Meetings() {
         time: meeting.time || '',
         timeTo: meeting.timeTo || '',
         venue: meeting.venue || '',
+        locationUrl: meeting.locationUrl || '',
         assignedZones: meeting.assignedZones || []
       });
     } else {
       setEditingId(null);
-      setFormData({ title: '', date: '', time: '', timeTo: '', venue: '', assignedZones: [] });
+      setFormData({ title: '', date: '', time: '', timeTo: '', venue: '', locationUrl: '', assignedZones: [] });
     }
     setIsModalOpen(true);
   };
@@ -145,6 +147,14 @@ export default function Meetings() {
                 <div className={styles.infoRow}>
                   <strong>Venue:</strong> {meeting.venue || 'TBD'}
                 </div>
+                {meeting.locationUrl && (
+                  <div className={styles.infoRow}>
+                    <MapPin size={16} />
+                    <a href={meeting.locationUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)', textDecoration: 'underline' }}>
+                      View on Map
+                    </a>
+                  </div>
+                )}
                 <div className={styles.zonesList}>
                   <strong>Zones:</strong>
                   <div className={styles.tags}>
@@ -205,14 +215,23 @@ export default function Meetings() {
                   />
                 </div>
               </div>
-              <div className={styles.inputGroup}>
-                <label>Venue / Location</label>
-                <input 
-                  value={formData.venue} 
-                  onChange={(e) => setFormData({...formData, venue: e.target.value})} 
-                  placeholder="e.g. Munavvirul Islam Women's College"
-                />
-              </div>
+                <div className={styles.inputGroup}>
+                  <label>Venue / Location Name</label>
+                  <input 
+                    value={formData.venue} 
+                    onChange={(e) => setFormData({...formData, venue: e.target.value})} 
+                    placeholder="e.g. Main Auditorium"
+                  />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label>Location Map URL</label>
+                  <input 
+                    type="url"
+                    value={formData.locationUrl} 
+                    onChange={(e) => setFormData({...formData, locationUrl: e.target.value})} 
+                    placeholder="e.g. https://maps.google.com/..."
+                  />
+                </div>
               <div className={styles.inputGroup}>
                 <label>Assigned Zones (Hold Ctrl/Cmd to select multiple)</label>
                 <select 
