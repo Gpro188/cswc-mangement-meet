@@ -5,7 +5,7 @@ import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase';
 import { Button } from '@/components/ui/Button';
 import styles from './meetings.module.css';
-import { Trash2, Plus, Edit2, Calendar, Clock } from 'lucide-react';
+import { Trash2, Plus, Edit2, Calendar, Clock, MapPin } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface MeetingCenter {
