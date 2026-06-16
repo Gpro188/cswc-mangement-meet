@@ -2,7 +2,7 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 const { Server } = require('socket.io');
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -74,7 +74,7 @@ app.prepare().then(() => {
 
     // Handle Reminder Queue
     socket.on('start-reminders', async (data) => {
-      const { participants, messageTemplate } = data;
+      const { participants, messageTemplate, posterUrl } = data;
       
       if (connectionStatus !== 'CONNECTED') {
         socket.emit('reminder-error', 'WhatsApp is not connected!');
@@ -82,6 +82,17 @@ app.prepare().then(() => {
       }
 
       socket.emit('reminder-progress', { status: 'STARTED', total: participants.length, sent: 0 });
+
+      let mediaObject = null;
+      if (posterUrl && posterUrl.trim() !== '') {
+        try {
+          console.log(`Downloading media from posterUrl: ${posterUrl}`);
+          mediaObject = await MessageMedia.fromUrl(posterUrl);
+        } catch (mediaError) {
+          console.error(`Failed to download poster media from ${posterUrl}:`, mediaError);
+          socket.emit('reminder-error', `Warning: Failed to download poster image. Sending without poster.`);
+        }
+      }
 
       let sentCount = 0;
       for (const participant of participants) {
@@ -112,7 +123,14 @@ app.prepare().then(() => {
           
           const numberId = numberIdObj._serialized;
           console.log(`Attempting to send message to: ${numberId}`);
-          const msgResponse = await client.sendMessage(numberId, personalizedMsg);
+          
+          let msgResponse;
+          if (mediaObject) {
+            msgResponse = await client.sendMessage(numberId, mediaObject, { caption: personalizedMsg });
+          } else {
+            msgResponse = await client.sendMessage(numberId, personalizedMsg);
+          }
+          
           console.log(`Message send response:`, msgResponse?.id?._serialized);
           
           sentCount++;

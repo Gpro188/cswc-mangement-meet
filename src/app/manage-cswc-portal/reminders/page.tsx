@@ -17,6 +17,7 @@ export default function RemindersPage() {
   
   const [selectedCenter, setSelectedCenter] = useState<string>('');
   const [messageTemplate, setMessageTemplate] = useState<string>('');
+  const [posterUrl, setPosterUrl] = useState<string>('');
   const [participantsList, setParticipantsList] = useState<any[]>([]);
   
   const [sendingState, setSendingState] = useState<{
@@ -77,6 +78,7 @@ export default function RemindersPage() {
     if (!selectedCenter) {
       setParticipantsList([]);
       setMessageTemplate('');
+      setPosterUrl('');
       return;
     }
 
@@ -86,6 +88,7 @@ export default function RemindersPage() {
     // Build default message
     const defaultMsg = `Dear [Name],\n\nThis is a reminder from CSWC. The Management Meet for your center is scheduled for ${center.date || 'TBD'} at ${center.time || 'TBD'}${center.timeTo ? ` - ${center.timeTo}` : ''}.\n\nVenue: ${center.venue || center.title}${center.locationUrl ? `\nLocation Map: ${center.locationUrl}` : ''}\n\nWe hope you will participate in the meeting.`;
     setMessageTemplate(defaultMsg);
+    setPosterUrl(center.posterUrl || '');
 
     // Get participants
     const assignedZoneNames = center.assignedZones?.map((zId: string) => zones.find(z => z.id === zId)?.name).filter(Boolean) || [];
@@ -120,7 +123,8 @@ export default function RemindersPage() {
     
     socket.emit('start-reminders', {
       participants: participantsList,
-      messageTemplate
+      messageTemplate,
+      posterUrl
     });
   };
 
@@ -156,6 +160,19 @@ export default function RemindersPage() {
                 <div className={styles.infoBox}>
                   <p><strong>Total Recipients:</strong> {participantsList.length} (participants with phone numbers)</p>
                   <p><strong>Estimated Sending Time:</strong> ~{(participantsList.length * 20 / 60).toFixed(1)} minutes</p>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Poster Image URL (Optional)</label>
+                  <input 
+                    type="url"
+                    className={styles.input}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-300)' }}
+                    value={posterUrl}
+                    onChange={(e) => setPosterUrl(e.target.value)}
+                    disabled={sendingState.status === 'STARTED' || sendingState.status === 'SENDING'}
+                    placeholder="Direct link to image (e.g. Imgur, Drive)"
+                  />
                 </div>
 
                 <div className={styles.formGroup}>

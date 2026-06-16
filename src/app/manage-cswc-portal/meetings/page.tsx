@@ -16,6 +16,7 @@ interface MeetingCenter {
   timeTo: string;
   venue: string;
   locationUrl?: string;
+  posterUrl?: string;
   assignedZones: string[];
 }
 
@@ -32,7 +33,7 @@ export default function Meetings() {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ title: '', date: '', time: '', timeTo: '', venue: '', locationUrl: '', assignedZones: [] as string[] });
+  const [formData, setFormData] = useState({ title: '', date: '', time: '', timeTo: '', venue: '', locationUrl: '', posterUrl: '', assignedZones: [] as string[] });
 
   const fetchData = async () => {
     setLoading(true);
@@ -95,11 +96,12 @@ export default function Meetings() {
         timeTo: meeting.timeTo || '',
         venue: meeting.venue || '',
         locationUrl: meeting.locationUrl || '',
+        posterUrl: meeting.posterUrl || '',
         assignedZones: meeting.assignedZones || []
       });
     } else {
       setEditingId(null);
-      setFormData({ title: '', date: '', time: '', timeTo: '', venue: '', locationUrl: '', assignedZones: [] });
+      setFormData({ title: '', date: '', time: '', timeTo: '', venue: '', locationUrl: '', posterUrl: '', assignedZones: [] });
     }
     setIsModalOpen(true);
   };
@@ -230,6 +232,15 @@ export default function Meetings() {
                     value={formData.locationUrl} 
                     onChange={(e) => setFormData({...formData, locationUrl: e.target.value})} 
                     placeholder="e.g. https://maps.google.com/..."
+                  />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label>Poster Image URL</label>
+                  <input 
+                    type="url"
+                    value={formData.posterUrl} 
+                    onChange={(e) => setFormData({...formData, posterUrl: e.target.value})} 
+                    placeholder="Direct link to image (e.g. Imgur, Drive)"
                   />
                 </div>
               <div className={styles.inputGroup}>
