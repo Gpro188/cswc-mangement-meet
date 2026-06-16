@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { db, storage } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Button } from '@/components/ui/Button';
 import styles from './meetings.module.css';
 import { Trash2, Plus, Edit2, Calendar, Clock, MapPin } from 'lucide-react';
@@ -34,6 +35,7 @@ export default function Meetings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ title: '', date: '', time: '', timeTo: '', venue: '', locationUrl: '', posterUrl: '', assignedZones: [] as string[] });
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -109,6 +111,24 @@ export default function Meetings() {
   const handleZoneSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Array.from(e.target.selectedOptions, option => option.value);
     setFormData({ ...formData, assignedZones: value });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const storageRef = ref(storage, `posters/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      setFormData(prev => ({ ...prev, posterUrl: url }));
+      toast.success('Image uploaded successfully');
+    } catch (error: any) {
+      toast.error('Error uploading image: ' + error.message);
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   return (
@@ -235,13 +255,25 @@ export default function Meetings() {
                   />
                 </div>
                 <div className={styles.inputGroup}>
-                  <label>Poster Image URL</label>
-                  <input 
-                    type="url"
-                    value={formData.posterUrl} 
-                    onChange={(e) => setFormData({...formData, posterUrl: e.target.value})} 
-                    placeholder="Direct link to image (e.g. Imgur, Drive)"
-                  />
+                  <label>Poster Image (Upload or enter URL)</label>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <input 
+                      type="url"
+                      value={formData.posterUrl} 
+                      onChange={(e) => setFormData({...formData, posterUrl: e.target.value})} 
+                      placeholder="Direct link to image"
+                      style={{ flex: 1 }}
+                    />
+                    <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-500)', whiteSpace: 'nowrap' }}>OR</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage}
+                      style={{ flex: 1, padding: '0.3rem' }}
+                    />
+                    {uploadingImage && <span style={{ fontSize: '0.8rem', color: 'var(--color-primary)' }}>Uploading...</span>}
+                  </div>
                 </div>
               <div className={styles.inputGroup}>
                 <label>Assigned Zones (Hold Ctrl/Cmd to select multiple)</label>

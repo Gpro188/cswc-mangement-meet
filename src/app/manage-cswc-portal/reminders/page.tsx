@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { db, storage } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/Button';
 import { Send, AlertTriangle } from 'lucide-react';
 import styles from './reminders.module.css';
@@ -19,6 +21,7 @@ export default function RemindersPage() {
   const [messageTemplate, setMessageTemplate] = useState<string>('');
   const [posterUrl, setPosterUrl] = useState<string>('');
   const [participantsList, setParticipantsList] = useState<any[]>([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
   
   const [sendingState, setSendingState] = useState<{
     status: 'IDLE' | 'STARTED' | 'SENDING' | 'COMPLETED' | 'ERROR';
@@ -106,6 +109,24 @@ export default function RemindersPage() {
 
   }, [selectedCenter, centers, zones, registrations]);
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const storageRef = ref(storage, `posters/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      setPosterUrl(url);
+      toast.success('Image uploaded successfully');
+    } catch (error: any) {
+      toast.error('Error uploading image: ' + error.message);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleStartSending = () => {
     if (!socket || whatsappStatus !== 'CONNECTED') {
       alert('WhatsApp is not connected!');
@@ -163,16 +184,27 @@ export default function RemindersPage() {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label>Poster Image URL (Optional)</label>
-                  <input 
-                    type="url"
-                    className={styles.input}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-300)' }}
-                    value={posterUrl}
-                    onChange={(e) => setPosterUrl(e.target.value)}
-                    disabled={sendingState.status === 'STARTED' || sendingState.status === 'SENDING'}
-                    placeholder="Direct link to image (e.g. Imgur, Drive)"
-                  />
+                  <label>Poster Image (Upload or enter URL)</label>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <input 
+                      type="url"
+                      className={styles.input}
+                      style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-300)' }}
+                      value={posterUrl}
+                      onChange={(e) => setPosterUrl(e.target.value)}
+                      disabled={sendingState.status === 'STARTED' || sendingState.status === 'SENDING'}
+                      placeholder="Direct link to image"
+                    />
+                    <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-500)', whiteSpace: 'nowrap' }}>OR</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage || sendingState.status === 'STARTED' || sendingState.status === 'SENDING'}
+                      style={{ flex: 1, padding: '0.75rem' }}
+                    />
+                    {uploadingImage && <span style={{ fontSize: '0.8rem', color: 'var(--color-primary)' }}>Uploading...</span>}
+                  </div>
                 </div>
 
                 <div className={styles.formGroup}>
