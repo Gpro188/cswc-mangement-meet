@@ -23,6 +23,8 @@ interface MeetingInfo {
   registeredInstitutions: number;
   pendingInstitutions: number;
   registeredMembers: number;
+  registeredInstitutionList: any[];
+  pendingInstitutionList: any[];
 }
 
 export default function Dashboard() {
@@ -35,6 +37,9 @@ export default function Dashboard() {
   });
   const [meetings, setMeetings] = useState<MeetingInfo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalData, setModalData] = useState<any[]>([]);
 
   useEffect(() => {
     async function fetchStats() {
@@ -74,16 +79,23 @@ export default function Dashboard() {
             return z ? (z as any).name : '';
           }).filter((name: string) => name);
 
-          // Total institutions in assigned zones
-          const totalInstitutions = institutionsData.filter(inst => assignedZoneNames.includes((inst as any).zone)).length;
+          const totalInstitutionsList = institutionsData.filter(inst => assignedZoneNames.includes((inst as any).zone));
+          const totalInstitutions = totalInstitutionsList.length;
 
           // Registrations for this center (check both centerId and zone mapping)
           const meetingRegs = regsData.filter(reg => {
             const r = reg as any;
             return r.centerId === doc.id || assignedZoneNames.includes(r.zone);
           });
-          const registeredInstitutions = meetingRegs.length;
-          const pendingInstitutions = Math.max(0, totalInstitutions - registeredInstitutions);
+          const registeredInstitutionList = totalInstitutionsList.filter(inst => 
+            meetingRegs.some(reg => (reg as any).institutionId === inst.id || (reg as any).institutionName === (inst as any).name)
+          );
+          const pendingInstitutionList = totalInstitutionsList.filter(inst => 
+            !meetingRegs.some(reg => (reg as any).institutionId === inst.id || (reg as any).institutionName === (inst as any).name)
+          );
+
+          const registeredInstitutions = registeredInstitutionList.length;
+          const pendingInstitutions = pendingInstitutionList.length;
           
           let registeredMembers = 0;
           meetingRegs.forEach(reg => {
@@ -101,7 +113,9 @@ export default function Dashboard() {
             totalInstitutions,
             registeredInstitutions,
             pendingInstitutions,
-            registeredMembers
+            registeredMembers,
+            registeredInstitutionList,
+            pendingInstitutionList
           };
         });
 
@@ -203,8 +217,30 @@ export default function Dashboard() {
                     <tr key={meeting.id}>
                       <td className={styles.meetingTitle}>{meeting.title}</td>
                       <td>{meeting.totalInstitutions}</td>
-                      <td>{meeting.registeredInstitutions}</td>
-                      <td>{meeting.pendingInstitutions}</td>
+                      <td>
+                        <button 
+                          className={styles.clickableCount}
+                          onClick={() => {
+                            setModalTitle(`Registered Institutions - ${meeting.title}`);
+                            setModalData(meeting.registeredInstitutionList);
+                            setModalOpen(true);
+                          }}
+                        >
+                          {meeting.registeredInstitutions}
+                        </button>
+                      </td>
+                      <td>
+                        <button 
+                          className={styles.clickableCount}
+                          onClick={() => {
+                            setModalTitle(`Pending Institutions - ${meeting.title}`);
+                            setModalData(meeting.pendingInstitutionList);
+                            setModalOpen(true);
+                          }}
+                        >
+                          {meeting.pendingInstitutions}
+                        </button>
+                      </td>
                       <td>{meeting.registeredMembers}</td>
                       <td>{meeting.date ? new Date(meeting.date).toLocaleDateString() : 'TBD'} {meeting.time ? `at ${meeting.time}` : ''}</td>
                       <td>
@@ -224,6 +260,33 @@ export default function Dashboard() {
           </table>
         </div>
       </div>
+
+      {modalOpen && (
+        <div className={styles.modalOverlay} onClick={() => setModalOpen(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>{modalTitle}</h3>
+              <button className={styles.closeButton} onClick={() => setModalOpen(false)}>&times;</button>
+            </div>
+            <div className={styles.modalBody}>
+              {modalData && modalData.length > 0 ? (
+                <ul className={styles.institutionList}>
+                  {modalData.map((inst, index) => (
+                    <li key={index} className={styles.institutionListItem}>
+                      <strong>{inst.name || 'Unknown Institution'}</strong>
+                      {inst.zone && <span>Zone: {inst.zone}</span>}
+                      {inst.place && <span>Place: {inst.place}</span>}
+                      {inst.headName && <span>Head: {inst.headName}</span>}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className={styles.noData}>No institutions found.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
