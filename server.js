@@ -86,11 +86,18 @@ app.prepare().then(() => {
       let mediaObject = null;
       if (posterUrl && posterUrl.trim() !== '') {
         try {
-          console.log(`Downloading media from posterUrl: ${posterUrl}`);
-          mediaObject = await MessageMedia.fromUrl(posterUrl);
+          if (posterUrl.startsWith('data:image')) {
+            console.log(`Processing base64 poster image`);
+            const [header, base64Data] = posterUrl.split(',');
+            const mimetype = header.split(':')[1].split(';')[0];
+            mediaObject = new MessageMedia(mimetype, base64Data, 'poster.jpg');
+          } else {
+            console.log(`Downloading media from posterUrl: ${posterUrl}`);
+            mediaObject = await MessageMedia.fromUrl(posterUrl);
+          }
         } catch (mediaError) {
-          console.error(`Failed to download poster media from ${posterUrl}:`, mediaError);
-          socket.emit('reminder-error', `Warning: Failed to download poster image. Sending without poster.`);
+          console.error(`Failed to process poster media:`, mediaError);
+          socket.emit('reminder-error', `Warning: Failed to process poster image. Sending without poster.`);
         }
       }
 

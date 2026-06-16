@@ -117,18 +117,26 @@ export default function Meetings() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploadingImage(true);
-    try {
-      const storageRef = ref(storage, `posters/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      setFormData(prev => ({ ...prev, posterUrl: url }));
-      toast.success('Image uploaded successfully');
-    } catch (error: any) {
-      toast.error('Error uploading image: ' + error.message);
-    } finally {
-      setUploadingImage(false);
+    if (file.size > 1048576) {
+      toast.error('File size must be under 1MB. Please compress it or use a URL.');
+      return;
     }
+
+    setUploadingImage(true);
+    
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setFormData(prev => ({ ...prev, posterUrl: base64String }));
+      setUploadingImage(false);
+      toast.success('Image attached successfully');
+    };
+    reader.onerror = () => {
+      toast.error('Failed to read file');
+      setUploadingImage(false);
+    };
+    
+    reader.readAsDataURL(file);
   };
 
   return (
